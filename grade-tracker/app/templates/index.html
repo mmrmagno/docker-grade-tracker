@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.png') }}">
+    <title>Grade tracker</title>
+</head>
+
+<body>
+    <h1>subjects/Grades</h1>
+    <form action="/" method="post">
+        <label for="subject">Subject:</label>
+        <input type="text" id="subject" name="subject" required><br><br>
+        <label for="grade">Grade:</label>
+        <input type="number" id="grade" name="grade" step="0.01" required><br><br>
+        <input type="submit" value="Add Grade">
+    </form>
+    <br>
+    <table border="1">
+        <tr>
+            <th>Subject</th>
+            <th>Grades</th>
+            <th>Average Grade</th>
+            <th>Remove</th>
+        </tr>
+        {% for subject, grades in subjects.items() %}
+        <tr>
+            <td>{{ subject }}</td>
+            <td>
+                {% for index, grade in grades|enumerate %} {{ grade }}{% if not loop.last %}, {% endif %} {% endfor %}
+            </td>
+            <td>{{ grades|average }}</td>
+            <td>
+                <form action="/remove" method="post">
+                    <input type="hidden" name="subject" value="{{ subject }}">
+                    <select name="grade">
+                        {% for index, grade in grades|enumerate %}
+                        <option value="{{ grade }}_{{ index }}">{{ grade }}</option>
+                        {% endfor %}
+                    </select>
+                    <input type="submit" value="Remove">
+                </form>
+            </td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+
+</html>
