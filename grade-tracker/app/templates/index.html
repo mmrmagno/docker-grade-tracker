@@ -3,20 +3,101 @@
 
 <head>
     <link rel="icon" type="image/x-icon" href="{{ url_for('static', filename='favicon.png') }}">
-    <title>Grade tracker</title>
+    <title>Grade Tracker</title>
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+        }
+        
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        
+        form {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+        
+        input[type="text"],
+        input[type="number"] {
+            width: 100%;
+            padding: 8px;
+            margin-bottom: 10px;
+            border: 1px solid #ced4da;
+            border-radius: 4px;
+        }
+        
+        input[type="submit"] {
+            background-color: #007bff;
+            color: #ffffff;
+            padding: 10px 15px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        
+        th,
+        td {
+            padding: 8px;
+            border: 1px solid #ced4da;
+            text-align: left;
+        }
+        
+        th {
+            background-color: #f1f1f1;
+            font-weight: bold;
+        }
+        
+        .remove-form {
+            display: inline-block;
+        }
+        
+        .remove-button {
+            background-color: #dc3545;
+            color: #ffffff;
+            padding: 6px 10px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
 </head>
 
 <body>
-    <h1>subjects/Grades</h1>
+    {% if 'username' not in session %}
+    <h1>Login</h1>
+    <form method="POST" action="/login">
+        <label for="username">Username:</label>
+        <input type="text" id="username" name="username" required><br>
+        <label for="password">Password:</label>
+        <input type="password" id="password" name="password" required><br>
+        <input type="submit" value="Login">
+    </form>
+    {% else %}
+    <h1>Subjects/Grades</h1>
     <form action="/" method="post">
         <label for="subject">Subject:</label>
-        <input type="text" id="subject" name="subject" required><br><br>
+        <input type="text" id="subject" name="subject" required><br>
         <label for="grade">Grade:</label>
-        <input type="number" id="grade" name="grade" step="0.01" required><br><br>
+        <input type="number" id="grade" name="grade" step="0.01" required><br>
         <input type="submit" value="Add Grade">
     </form>
     <br>
-    <table border="1">
+    <table>
         <tr>
             <th>Subject</th>
             <th>Grades</th>
@@ -31,19 +112,20 @@
             </td>
             <td>{{ grades|average }}</td>
             <td>
-                <form action="/remove" method="post">
+                <form class="remove-form" action="/remove" method="post">
                     <input type="hidden" name="subject" value="{{ subject }}">
                     <select name="grade">
                         {% for index, grade in grades|enumerate %}
                         <option value="{{ grade }}_{{ index }}">{{ grade }}</option>
                         {% endfor %}
                     </select>
-                    <input type="submit" value="Remove">
+                    <input class="remove-button" type="submit" value="Remove">
                 </form>
             </td>
         </tr>
         {% endfor %}
     </table>
+    {% endif %}
 </body>
 
 </html>
