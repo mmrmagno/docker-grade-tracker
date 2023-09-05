@@ -12,7 +12,7 @@ Session(app)
 
 
 def get_db_connection():
-    conn = sqlite3.connect('grade-tracker/grades.db')
+    conn = sqlite3.connect('../grades.db')
     conn.row_factory = sqlite3.Row
     return conn
 
